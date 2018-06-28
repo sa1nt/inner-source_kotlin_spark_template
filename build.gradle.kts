@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm") version "1.2.50"
+    id("org.flywaydb.flyway").version("5.1.3")
     id("com.github.johnrengelman.shadow").version("2.0.4")
 }
 
@@ -28,6 +29,8 @@ dependencies {
     compile(group = "com.fasterxml.jackson.core", name = "jackson-databind", version = "2.9.5")
     compile(group = "com.fasterxml.jackson.module", name = "jackson-module-parameter-names", version = "2.9.5")
     compile(group = "org.slf4j", name = "slf4j-simple", version = "1.7.25")
+
+    runtime(group = "org.postgresql", name = "postgresql", version = "42.2.2")
 
     testCompile(kotlin("stdlib", kotlinVersion))
     testImplementation(group = "org.junit", name = "junit-bom", version = junitVersion)
@@ -63,3 +66,10 @@ tasks.withType<KotlinCompile> {
 
 val shadowJar: ShadowJar by tasks
 shadowJar.archiveName = "app.jar"
+
+flyway {
+    url = "jdbc:postgresql://scl000004568.sccloud.swissre.com:5432/postgres"
+    user = "postgres"
+    password = "example"
+    locations = arrayOf("filesystem:./db")
+}
